@@ -1,9 +1,9 @@
 package com.lockers.prototype;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 
@@ -15,7 +15,6 @@ public class LockersFilePrototype {
 		String inputSearch;
 		String inputDelete;
 		String inputFile;
-		String inputContent;
 		double inputB=0;
 	
 		System.out.println("Welcome to LockersMe.com");
@@ -25,18 +24,27 @@ public class LockersFilePrototype {
 		LockersFilePrototype fm=new LockersFilePrototype();
 		//inputA=fm.FileOperationOptions();
 		
+		@SuppressWarnings("resource")
 		Scanner input = new Scanner(System.in);
 									
 		while(true) {
 			
-			System.out.println("Please Select below Options:"
+			System.out.println("Please Select below Options by entering number between 1 and 3:"
 					+ "\n\t 1.Retrive Files"
 					+ "\n\t 2.More business operations"
 					+ "\n\t 3.Close Program");
 			
-			
-		
-		    inputA=input.nextInt();
+				   
+		    do {
+		        try {
+		             inputA = input.nextInt();
+		        } catch (InputMismatchException e) {
+		            System.out.println("Invalid input. Enter a number between 1 and 3 ");
+		        }
+		        input.nextLine(); // clears the buffer
+		    } while (inputA <= 0);
+		    
+		    
 		  
 			
 			if (inputA==1) {
@@ -49,16 +57,29 @@ public class LockersFilePrototype {
 				
 				while(true) {
 					fm.businessOperationOptions();
-					inputB=input.nextDouble();
+					do {
+				        try {
+				        	inputB = input.nextDouble();
+					        	if(inputB<2.1 ||inputB>2.4 )
+					        	{
+					        		System.out.println("Invalid input. Enter a number between 2.1 and 2.4 ");
+					        		}
+				        } catch (InputMismatchException e) {
+				            System.out.println("Invalid input. Enter a number between 2.1 and 2.4 ");
+				        }
+				        input.nextLine(); // clears the buffer
+				        
+				    } while (inputB <= 0);
+					
 										
 					if (inputB==2.1) {
 						System.out.println("What is the file name?");
 						inputFile=input.next();
 						
-				    	System.out.println("Enter some data in the file");
-				    	inputContent=input.next();
+
+						
 				    	
-				    	fm.addFile(inputFile,fm.filePathDir,inputContent);
+				    	fm.addFile(inputFile,fm.filePathDir);
 					}
 					else if(inputB==2.2) {
 						System.out.println("Enter the name of the file you want to delete:");
@@ -79,8 +100,7 @@ public class LockersFilePrototype {
 												
 					}
 					else if (inputB==2.4) {
-						System.out.println("Go back to menu"+inputB);
-						System.out.println("");
+						System.out.println("");//Back to main menu
 						break;
 					}
 				}
@@ -103,8 +123,8 @@ public class LockersFilePrototype {
 	
 	/*File Managing Methods*/
 	
-	String filePathDir="D:\\FilePractise/";
-	File folder = new File("D:\\FilePractise/");
+	String filePathDir="D:\\\\FilePractise\\";
+	File folder = new File("D:\\\\FilePractise\\");
 	
 	   //File menu to selection various operations
 	
@@ -170,7 +190,7 @@ public class LockersFilePrototype {
 	            {
 	            	searchFile(name,fil);
 	            }
-	            else if (name.equalsIgnoreCase(fil.getName()))
+	            else if (name.equals(fil.getName()))//checks case sensitivity
 	            {
 	                	            	
 	            	fileFound=fil.getName();
@@ -181,9 +201,11 @@ public class LockersFilePrototype {
 	          if(fileFound!=null) {
 	        	  
 	        	  System.out.println("Found file: "+ fileFound);
+	        	  System.out.println(" ");
 	          }else
 	          {
 	        	  System.out.println("File not Found");
+	        	  System.out.println(" ");
 	          }
 	          
 	          
@@ -191,20 +213,28 @@ public class LockersFilePrototype {
 	    
 	    public void deleteFile(String fileName, String filePathDir) {
 	    	
-	    	String filePath=filePathDir+fileName;
+	    	//String filePath=filePathDir+fileName;
 	    		
-	    	
+	
 	    	try  
 	    	{         
-	    	File f=new File(filePath);          //file to be delete  
-			    	if(f.delete())                      //returns Boolean value  
+	    		
+	    	    		
+	    	File f=new File(filePathDir+fileName);          //file to be delete 
+	    	
+	    	if(f.exists()) { // checks case sensitivity
+		    	
+	    	
+			    	if(f.delete())                    
 			    	{  
-			    			System.out.println(f.getName() + " deleted");   //getting and printing the file name  
+			    			System.out.println(f.getName() + " deleted successfuly");   //getting and printing the file name  
 			    	}  
 			    	else  
 			    	{  
-			    			System.out.println("failed");  
+			    			System.out.println("failed to delete");  
 			    	}  
+			    	
+	    	}
 	    	}  
 	    	catch(Exception e)  
 	    	{  
@@ -213,20 +243,25 @@ public class LockersFilePrototype {
 	    	
 	    }
 	    
-	    public void addFile(String fileName,String fileDir, String writeContent) {
+	    public void addFile(String fileName,String fileDir) {
 	    	
 	    	 File f2=new File (fileDir+fileName);
+	    	if (f2.exists()){
+	    		
+	    		System.out.println("file already exists");
+	    	}
+	    	else {
+	    		    	
+			    	try {
+						f2.createNewFile();
+						System.out.println("file created");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	    	}
 	    	
-	    	try {
-				f2.createNewFile();
-				System.out.println("file created");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    	
-	    	
-	    	
+	    	/*
 	        try{    
 	            FileWriter fw=new FileWriter(fileDir+fileName);    
 	            fw.write(writeContent);    
@@ -237,8 +272,9 @@ public class LockersFilePrototype {
 	        	   System.out.println(e);
 	        	   
 	        	   }    
-	           System.out.println("Content Written");    
-	      }    
+	           System.out.println("Content Written");
+	           */    
+	      }  
 	    	
 	
 }
