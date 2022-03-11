@@ -22,7 +22,8 @@ public class LockersFilePrototype {
 		System.out.println("-----------------------------");
 		
 		LockersFilePrototype fm=new LockersFilePrototype();
-		//inputA=fm.FileOperationOptions();
+		
+		fm.createDirectory();
 		
 		@SuppressWarnings("resource")
 		Scanner input = new Scanner(System.in);
@@ -123,9 +124,18 @@ public class LockersFilePrototype {
 	
 	/*File Managing Methods*/
 	
-	String filePathDir="D:\\\\FilePractise\\";
-	File folder = new File("D:\\\\FilePractise\\");
+	String filePathDir="C:\\\\Project_Phase1\\";
+	File folder = new File("C:\\\\Project_Phase1\\");
 	
+	
+	public void createDirectory() {
+		  //Creating the directory
+	      
+	      File theDir = new File("C:\\\\Project_Phase1\\");
+	      if (!theDir.exists()){
+	          theDir.mkdirs();
+	      }
+	}
 	   //File menu to selection various operations
 	
 	   public int FileOperationOptions() {
@@ -234,6 +244,9 @@ public class LockersFilePrototype {
 			    			System.out.println("failed to delete");  
 			    	}  
 			    	
+	    	}
+	    	else {
+	    		System.out.println("File does not exist");  
 	    	}
 	    	}  
 	    	catch(Exception e)  
